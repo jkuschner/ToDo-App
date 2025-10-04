@@ -5,13 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -108,5 +115,40 @@ fun TitleBar() {
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
+    }
+}
+
+@Composable
+fun TaskInput(description: String,
+              onTitleChange: (String) -> Unit,
+              onAddTaskClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        // field where user inputs task text
+        TextField(
+            value = description,
+            onValueChange = onTitleChange,
+            placeholder = { Text("add a new Task here") },
+            singleLine = true,
+            modifier = Modifier.weight(1f)
+        )
+
+        //button to add the task
+        Button(
+            onClick = onAddTaskClick,
+            enabled = description.isNotBlank(), // disable add task button if there is no descriptio
+            modifier = Modifier.height(56.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF007AFF)
+            )
+        ) {
+            Icon(Icons.Filled.Add, contentDescription = "Add")
+        }
     }
 }
