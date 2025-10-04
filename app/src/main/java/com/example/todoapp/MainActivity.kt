@@ -110,11 +110,3 @@ fun TitleBar() {
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ToDoAppTheme {
-        Greeting("Android")
-    }
-}
