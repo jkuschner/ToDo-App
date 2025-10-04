@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.todoapp.ui.theme.ToDoAppTheme
@@ -36,11 +38,15 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun ToDoApp() {
+    val taskList = remember {
+        mutableStateListOf(
+            Task(0, "Finish 411A Assignment", false),
+            Task(1, "take out the trash", false),
+            Task(2, "dig for gold", true),
+            Task(3, "retire at an early age", false)
+        )
+    }
 }
 
 @Preview(showBackground = true)
