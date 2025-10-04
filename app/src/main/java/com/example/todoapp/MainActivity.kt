@@ -6,17 +6,18 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -49,10 +50,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             ToDoAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
                 }
             }
         }
@@ -72,6 +69,7 @@ fun ToDoApp() {
 
     // state to hold the current user input for a new task
     var newTaskDescription by remember {mutableStateOf("")}
+
 
     // define task actions
     val toggleTaskCompletion: (Int) -> Unit = {taskId ->
@@ -96,6 +94,26 @@ fun ToDoApp() {
         )
         taskList.add(newTask)
         newTaskDescription = "" // reset the new task description to be blank
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color(0xFFF5F7FA)
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            // title
+            TitleBar()
+            // text input for new tasks
+            TaskInput(
+                description = newTaskDescription,
+                onTitleChange = { newTaskDescription = it },
+                onAddTaskClick = {
+                    if (newTaskDescription.isNotBlank()) {
+                        addTask(newTaskDescription.trim())
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -148,7 +166,28 @@ fun TaskInput(description: String,
                 containerColor = Color(0xFF007AFF)
             )
         ) {
-            Icon(Icons.Filled.Add, contentDescription = "Add")
+            Text(text = "Add")
         }
+    }
+}
+
+@Preview(showSystemUi = true) // Use showSystemUi=true to see it in a full phone frame
+@Composable
+fun Preview_HeaderAssembly() {
+    // Use a Column to mimic the main structure
+    Column(modifier = Modifier.fillMaxSize().background(Color(0xFFF5F7FA))) {
+        TitleBar()
+        TaskInput(
+            description = "Design system check...",
+            onTitleChange = {},
+            onAddTaskClick = {}
+        )
+        // Add a placeholder section to visually simulate the scrollable list below
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "Task List Starts Here...",
+            modifier = Modifier.padding(16.dp),
+            color = Color.Gray
+        )
     }
 }
