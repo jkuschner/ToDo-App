@@ -30,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -58,9 +59,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ToDoAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                }
+            MaterialTheme(
+                colorScheme = lightColorScheme(
+                    primary = Color(0xFF007AFF),
+                    onPrimary = Color.White,
+                    surface = Color(0xFFF57FA),
+                    background = Color(0xFFF57FA),
+                )
+            ) {
+                ToDoApp()
             }
         }
     }
@@ -122,6 +129,13 @@ fun ToDoApp() {
                         addTask(newTaskDescription.trim())
                     }
                 }
+            )
+
+            // list of tasks(active and completed)
+            TaskContentList(
+                taskList = taskList,
+                toggleCompletion = toggleTaskCompletion,
+                deleteTask = deleteTask
             )
         }
     }
