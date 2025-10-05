@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,8 +14,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -113,6 +123,108 @@ fun ToDoApp() {
                     }
                 }
             )
+        }
+    }
+}
+
+@Composable
+fun TaskItem(
+    task: Task,
+    onToggle: (Int) -> Unit,
+    onDelete: (Int) -> Unit
+) {
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White)
+            .clickable { onToggle(task.id) }
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = task.isCompleted,
+            onCheckedChange = { onToggle(task.id) }
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Text(
+            text = task.description,
+            color = Color.Black,
+            fontSize = 16.sp,
+            modifier = Modifier.weight(1f)
+        )
+
+        IconButton(
+            onClick = { onDelete(task.id) },
+            modifier = Modifier.size(36.dp)
+        ) {
+            Icon(
+                Icons.Filled.Delete,
+                contentDescription = "Delete Task",
+                tint = Color(0xFFCC0000)
+            )
+        }
+    }
+}
+
+@Composable
+fun TaskContentList(
+    taskList: List<Task>,
+    toggleCompletion: (Int) -> Unit,
+    deleteTask: (Int) -> Unit
+) {
+    val activeTasks = taskList.filter { !it.isCompleted }
+    val completedTasks = taskList.filter { it.isCompleted }
+
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        // Active Tasks section
+        Text(
+            text = "Active Tasks",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF333333)
+        )
+        if (activeTasks.isEmpty()) {
+            Text(
+                text = "No active tasks :)",
+                color = Color.Gray,
+                modifier = Modifier.padding(vertical =  8.dp)
+            )
+        } else {
+            activeTasks.forEach { task ->
+                TaskItem(task, toggleCompletion, deleteTask)
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        // Complete Tasks section
+        Text(
+            text = "Completed Tasks",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF333333)
+        )
+        if (completedTasks.isEmpty()) {
+            Text(
+                text = "No tasks completed :(",
+                color = Color.Gray,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+        } else {
+            completedTasks.forEach { task ->
+                TaskItem(task, toggleCompletion, deleteTask)
+                Spacer(modifier = Modifier.height(4.dp))
+            }
         }
     }
 }
